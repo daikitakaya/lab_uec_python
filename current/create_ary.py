@@ -12,8 +12,8 @@ raster_output = open('raster00.txt', 'w', encoding='utf8')
 
 # -- 各種パラメーター --
 TAU = 20.0
-W0 = 7.0
-V_th = 15.0
+W0 = 10.0
+V_th = 10.0
 V_max = 30.0
 V_re = 0.0
 
@@ -49,7 +49,7 @@ def runge(V,I,sum_input):
   return V + (v_k1 + (2 * v_k2) + (2 * v_k3) + v_k4) / 6.0
 
 for t in times:
-  I = np.zeros(60) + 20.0 + np.random.uniform(-9,9,60) #t秒における60個のニューロンへの入力(配列)
+  I = np.zeros(60) + 10.0 + np.random.uniform(-3,3,60) #t秒における60個のニューロンへの入力(配列)
   sum_input = np.zeros(60)
   for num_i in range(60):#ニューロンごとの処理
     if num_i == 0:
@@ -62,11 +62,11 @@ for t in times:
   for i in [i for i,j in enumerate(V) if j > V_th]:#15mV越える時
     t_sum += t - firing_times[i]
     t_interval.append(t - firing_times[i])
-    firing_count = firing_count + 1
     raster_output.write(str(t) + "\t" + str(i + 1) + "\n") #ラスター出力
     firing_times[i] = t
     V[i] = V_max
     if i == 0:
+      firing_count += 1
       v_output.write(str(t) + "\t" + str(V[0]) + "\n")
     V[i] = V_re
   for i in [i for i,j in enumerate(V) if j < V_th]:#ルンゲで値更新
@@ -74,8 +74,16 @@ for t in times:
 
 v_output.close()
 raster_output.close()
+t_interval_ave = t_sum / len(t_interval)
+count = 0
 for time in t_interval:
-  t2_sum += time - (t_sum / firing_count)
-bunsan = t2_sum ** 2 / firing_count
+  count += 1
+  t2_sum += (time - t_interval_ave) ** 2
+bunsan = t2_sum / len(t_interval)
 print("W0:" + str(W0))
-print("R:" + str(math.sqrt(bunsan) / firing_count))
+print('ニューロン０の発火回数:' + str(firing_count))
+print('データの個数:' + str(len(t_interval)))
+print('繰り返し回数:' + str(count))
+print('分散:' + str(bunsan))
+print('発火間隔平均:' + str(t_interval_ave))
+print("R:" + str(math.sqrt(bunsan) / t_interval_ave))
