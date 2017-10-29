@@ -16,7 +16,7 @@ sum_input_output05 = open('sum_input05.txt', 'w', encoding='utf8')
 
 # -- 各種パラメーター --
 TAU = 20.0
-W0 = 0.0
+W0 = 50.0
 V_th = 10.0
 V_max = 30.0
 V_re = 0.0
@@ -33,7 +33,7 @@ firing_count = 0
 G = nx.watts_strogatz_graph(n=NEURON_NUM,k=4,p=0.05) #スモールワールド作成
 pair_ary = np.asarray(nx.to_numpy_matrix(G)) #グラフをArrayに変換
 I = np.zeros([NEURON_NUM]) #入力の配列
-V = np.zeros([NEURON_NUM]) + np.random.uniform(-5,5,NEURON_NUM)
+V = np.zeros([NEURON_NUM]) + np.random.uniform(-6,6,NEURON_NUM)
 sum_input = np.zeros([NEURON_NUM]) #各ニューロンへの入力の総和
 s_ij = np.zeros([NEURON_NUM,NEURON_NUM]) #j番目からi番目のニューロンへの入力
 firing_times = np.zeros([NEURON_NUM])
@@ -54,7 +54,7 @@ def runge(V,I,sum_input):
   return V + (v_k1 + (2 * v_k2) + (2 * v_k3) + v_k4) / 6.0
 
 for t in times:
-  I = np.zeros(NEURON_NUM) + 10.0 + np.random.uniform(-5.0,5.0,NEURON_NUM) #t秒における60個のニューロンへの入力(配列)
+  I = np.zeros(NEURON_NUM) + 10.0 + np.random.uniform(-6.0,6.0,NEURON_NUM) #t秒における60個のニューロンへの入力(配列)
   sum_input = np.zeros(NEURON_NUM)
   for num_i in range(NEURON_NUM):#ニューロンごとの処理
     sum_input[num_i] = sum_input[num_i] * np.exp(- (t - firing_times[num_i]) / 30.0)
