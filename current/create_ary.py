@@ -14,7 +14,8 @@ exp_value = open('exp.txt', 'w', encoding='utf-8')
 
 # -- 各種パラメーター --
 TAU = 20.0
-W0 = 10.0
+TAU_s = 30.0
+W0 = 0.0
 V_th = 10.0
 V_max = 30.0
 V_re = 0.0
@@ -56,11 +57,11 @@ def runge(V,I,sum_input): #ルンゲ
   return V + (v_k1 + (2 * v_k2) + (2 * v_k3) + v_k4) / 6.0
 
 for t in times:
-  I = np.zeros(NEURON_NUM) + 12.0 + np.random.uniform(-5.0,5.0,NEURON_NUM) #t秒におけるニューロンへの入力(配列)
+  I = np.zeros(NEURON_NUM) + 10.0 + np.random.uniform(-5.0,5.0,NEURON_NUM) #t秒におけるニューロンへの入力(配列)
   sum_input_output01.write(str(t) + "\t" + str(S[0]) + "\n") #時刻tにおけるSを出力
   v_output.write(str(t) + "\t" + str(V[0]) + "\n") #時刻tにおけるVを出力
   for num_i in range(NEURON_NUM): #ニューロンごとの処理
-    S[num_i] = S[num_i] * math.exp(-(t - firing_times[num_i]) / 30.0) #他ニューロンからの入力の総和の減衰
+    S[num_i] = S[num_i] * math.exp(-(t - firing_times[num_i]) / TAU_s) #他ニューロンからの入力の総和の減衰
     for connect_num in [i for i,j in enumerate(pair_ary[num_i,:]) if j == 1.0]: #接続しているニューロンを取得
       if V[connect_num] >= V_th: #num_iと接続しているニューロンが発火していれば
         s_ij[connect_num][num_i] += 1.0 #num_iへの入力を1mV増加
