@@ -16,7 +16,7 @@ S_value = open('S.txt', 'w', encoding='utf-8')
 
 # -- 各種パラメーター --
 TAU = 30.0
-TAU_s = 30.0
+TAU_s = 20.0
 W0 = 1.0
 V_th = 10.0
 V_max = 30.0
@@ -42,9 +42,6 @@ s = np.zeros([NEURON_NUM]) #i番目からj番目のニューロンへの入力
 firing_times = np.zeros([NEURON_NUM])# 発火時間を保持する配列
 times = np.arange(0,1000.01,0.01)# 時間を規定する配列
 time_interval = np.zeros([NEURON_NUM])
-
-# for i in range(NEURON_NUM):
-#   pair_ary[i][i] = 0.0
 
 @jit
 def lif(v, i, sum_i):
