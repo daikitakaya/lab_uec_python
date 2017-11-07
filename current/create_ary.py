@@ -17,7 +17,7 @@ S_value = open('S.txt', 'w', encoding='utf-8')
 # -- 各種パラメーター --
 TAU = 30.0
 TAU_s = 30.0
-W0 = 10.0
+W0 = 1.0
 V_th = 10.0
 V_max = 30.0
 V_re = 0.0
@@ -65,12 +65,10 @@ for t in times:
   v_output.write(str(t) + "\t" + str(V[0]) + "\n") #時刻tにおけるVを出力
   for num_i in range(NEURON_NUM):
     S[num_i] = s[num_i] * np.exp(-(t - firing_times[num_i]) / TAU_s)
-  for num_i in range(NEURON_NUM):
-    V[num_i] = runge(V[num_i], I[num_i], Sum_input[num_i]) #ルンゲで更新処理
   for num_i in range(NEURON_NUM): #ニューロンごとの処理
     for connect_num in [i for i,j in enumerate(pair_ary[num_i,:]) if j == 1.0]: #接続しているニューロンを取得
-      if pair_ary[num_i][connect_num] == 1.0:
-        Sum_input[num_i] += W0 * S[connect_num] #他のニューロンからnum_iへの入力を全て足し合わせる
+      Sum_input[num_i] += W0 * S[connect_num] #他のニューロンからnum_iへの入力を全て足し合わせる
+    V[num_i] = runge(V[num_i], I[num_i], Sum_input[num_i]) #ルンゲで更新処理
     if V[num_i] >= V_th:
       S[num_i] += 1.0
       t_sum += t - firing_times[num_i]# 前回発火からの時間差を足し合わせる
@@ -83,8 +81,6 @@ for t in times:
         firing_count += 1
         v_output.write(str(t) + "\t" + str(V[0]) + "\n")
       V[num_i] = V_re #膜電位を戻す
-    # else:
-    #   V[num_i] = runge(V[num_i], I[num_i], Sum_input[num_i]) #ルンゲで更新処理
   sum_input_output01.write(str(t) + "\t" + str(Sum_input[0]) + "\n") #時刻tにおけるSを出力
   exp_value.write(str(t) + "\t" + str(s[0]) + "\n")
   S_value.write(str(t) + "\t" + str(S[0]) + "\n")
