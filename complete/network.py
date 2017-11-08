@@ -36,6 +36,7 @@ I = np.zeros([NEURON_NUM]) #入力の配列
 V = np.zeros([NEURON_NUM]) + np.random.uniform(-5,5,NEURON_NUM)
 S = np.zeros([NEURON_NUM]) #各ニューロンへの入力の総和
 s = np.zeros([NEURON_NUM]) #i番目からj番目のニューロンへの入力
+s_pre = np.zeros([NEURON_NUM]) #i番目からj番目のニューロンへの入力
 firing_times = np.zeros([NEURON_NUM])# 発火時間を保持する配列
 times = np.arange(0,1000.01,0.01)# 時間を規定する配列
 time_interval = np.zeros([NEURON_NUM])
@@ -63,9 +64,9 @@ for t in times:
   for num_i in range(NEURON_NUM): #ニューロンごとの処理
     for connect_num in [i for i,j in enumerate(pair_ary[num_i,:]) if j == 1.0]: #接続しているニューロンを取得
       S[num_i] += W0 * s[connect_num] #他のニューロンからnum_iへの入力を全て足し合わせる
-      s[connect_num] = s[connect_num] * np.exp(-(t - firing_times[connect_num]) / TAU_s)
+      s[connect_num] = s_pre[connect_num] * np.exp(-(t - firing_times[connect_num]) / TAU_s)
     if V[num_i] >= V_th:
-      s[num_i] += 1.0
+      s_pre[num_i] += 1.0
       t_sum += t - firing_times[num_i]# 前回発火からの時間差を足し合わせる
       t_interval.append(t - firing_times[num_i] )# 時間差を記録
       raster_output01.write(str(t) + "\t" + str(num_i + 1) + "\n") #ラスター出力
