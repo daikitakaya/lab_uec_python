@@ -33,9 +33,8 @@ firing_count = 0
 
 G = nx.watts_strogatz_graph(n=NEURON_NUM,k=2,p=0.00) #スモールワールド作成
 pair_ary = np.asarray(nx.to_numpy_matrix(G)) #グラフをArrayに変換
-pair_ary = np.ones([NEURON_NUM,NEURON_NUM])# ニューロンの接続状況を表す行列
 I = np.zeros([NEURON_NUM]) #入力の配列
-V = np.zeros([NEURON_NUM]) + np.random.uniform(-5,5,NEURON_NUM)
+V = np.zeros([NEURON_NUM]) + np.random.uniform(-6,6,NEURON_NUM)
 S = np.zeros([NEURON_NUM]) #各ニューロンへの入力の総和
 Sum_input = np.zeros([NEURON_NUM]) #各ニューロンへの入力の総和
 s = np.zeros([NEURON_NUM]) #i番目からj番目のニューロンへの入力
